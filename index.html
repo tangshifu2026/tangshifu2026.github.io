@@ -2,55 +2,60 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>阿旺视频下载</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>阿旺视频</title>
 <style>
-body{font-family:-apple-system,sans-serif;background:#111;color:#fff;text-align:center;padding:40px 20px}
-h2{color:#07c160;margin-bottom:10px}
-.file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
-.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
-.btn2{display:inline-block;margin:10px;padding:12px 24px;background:#444;color:#ccc;border:none;border-radius:10px;font-size:14px;text-decoration:none;font-weight:500}
-.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
-.loading{color:#888}
-#status{margin:8px 0;font-size:13px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,sans-serif;background:#000;color:#fff;text-align:center}
+h2{color:#07c160;padding:16px 0 6px;font-size:18px}
+.hint{margin:10px 16px;font-size:13px;color:#999;line-height:1.6}
+.btn{display:inline-block;margin:8px;padding:12px 24px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:15px;text-decoration:none;font-weight:600}
+.btn2{display:inline-block;margin:8px;padding:10px 20px;background:#333;color:#ccc;border:none;border-radius:10px;font-size:14px;text-decoration:none}
+video{width:100%;max-height:70vh;background:#000;display:block}
+#player{margin:0 auto;max-width:600px}
+#status{font-size:12px;color:#888;padding:8px}
 </style>
 </head>
 <body>
-<h2>📥 阿旺视频下载</h2>
-<div id="filename" class="file"></div>
-<a class="btn" id="dllink" href="#">⬇ 点击下载</a>
-<div id="status" style="font-size:12px;color:#888;margin-top:8px"></div>
+<h2>阿旺视频</h2>
+<div id="filename" style="font-size:13px;color:#aaa;word-break:break-all;padding:0 16px 8px"></div>
+<div id="player">
+  <video id="v" controls playsinline autoplay muted style="display:none">
+    <source id="src" src="" type="video/mp4">
+  </video>
+  <div id="loading" class="hint">加载中...</div>
+</div>
+<div id="status"></div>
+<a class="btn" id="dllink" href="#" style="display:none" download>下载</a>
+<a class="btn2" href="javascript:history.back()">返回</a>
 <div class="hint">
-  如无法下载/显示乱码，请<br>
-  长按链接 →「在浏览器中打开」<br>
-  或复制链接到 Chrome/Safari 打开
+  播放后右下角 ... 保存视频到相册<br>
+  或右上角 用剪映打开编辑<br>
+  如无法播放 点下载按钮
 </div>
 <script>
 (function(){
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
-  if(!file){ document.getElementById('filename').innerText='缺少文件名参数'; return; }
-
-  // 当前隧道地址（自动同步）
+  if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
   var TUNNEL = 'par-roommates-venice-measuring.trycloudflare.com';
   var url = 'https://' + TUNNEL + '/download/' + encodeURIComponent(file);
-  var altUrl = 'https://' + TUNNEL + '/download/' + file; // 兜底：不编码
-
   document.getElementById('filename').innerText = file;
+  document.getElementById('src').src = url;
   document.getElementById('dllink').href = url;
-  document.getElementById('dllink').onclick = function(e){
-    // 先试编码版，失败静默回退
-    var t = this;
-    t.textContent = '下载中...';
-    fetch(url, {method:'HEAD'}).then(function(r){
-      if(r.ok){ window.location = url; }
-      else{ window.location = altUrl; }
-    }).catch(function(){
-      window.location = altUrl;
-    });
-    e.preventDefault();
+  document.getElementById('dllink').setAttribute('download', file);
+  var v = document.getElementById('v');
+  v.onloadedmetadata = function(){
+    document.getElementById('loading').style.display = 'none';
+    v.style.display = 'block';
+    document.getElementById('dllink').style.display = 'inline-block';
+    document.getElementById('status').innerText = '线上播放中 长按视频可保存';
   };
-  document.getElementById('status').innerText = '点击按钮下载，如失败请用外部浏览器';
+  v.onerror = function(){
+    document.getElementById('loading').innerText = '播放失败 请用下载按钮';
+    document.getElementById('dllink').style.display = 'inline-block';
+    document.getElementById('status').innerText = '';
+  };
 })();
 </script>
 </body>
