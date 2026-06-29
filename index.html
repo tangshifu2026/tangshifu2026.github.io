@@ -2,96 +2,38 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>阿旺视频</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>阿旺视频下载</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,sans-serif;background:#000;color:#fff;text-align:center}
-h2{color:#07c160;padding:16px 0 6px;font-size:18px}
-.hint{margin:10px 16px;font-size:13px;color:#999;line-height:1.6}
-.btn{display:inline-block;margin:8px;padding:14px 28px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
-.btn-w{background:#1aad19}
-.btn2{display:inline-block;margin:8px;padding:10px 20px;background:#333;color:#ccc;border:none;border-radius:10px;font-size:14px;text-decoration:none}
-video{width:100%;max-height:60vh;background:#000;display:block}
-#player{margin:0 auto;max-width:600px}
-#status{font-size:12px;color:#888;padding:8px}
-#wxHint{display:none;background:#222;border-radius:12px;padding:16px;margin:12px;text-align:left;color:#ccc;font-size:14px;line-height:1.8}
-#wxHint b{color:#07c160}
-.copyBtn{display:block;margin:12px auto;padding:12px 24px;background:#07c160;color:#fff;border:none;border-radius:8px;font-size:15px}
+body{font-family:-apple-system,sans-serif;background:#111;color:#fff;text-align:center;padding:40px 20px}
+h2{color:#07c160;margin-bottom:10px}
+.file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
+.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
+.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
+#status{font-size:12px;color:#888;margin-top:8px}
 </style>
 </head>
 <body>
-<h2>阿旺视频</h2>
-<div id="filename" style="font-size:13px;color:#aaa;word-break:break-all;padding:0 16px 8px"></div>
-
-<!-- 微信内提示 -->
-<div id="wxHint">
-  <b>微信内无法直接播放</b><br>
-  请复制下面链接，用浏览器打开：<br><br>
-  <span id="wxUrl" style="word-break:break-all;color:#aaa;font-size:12px"></span><br><br>
-  <button class="copyBtn" onclick="copyWxUrl()">复制链接</button>
-  <br>或点右上角 <b>&middot;&middot;&middot;</b> → <b>在浏览器中打开</b>
-</div>
-
-<!-- 外部浏览器：直接播放 -->
-<div id="player">
-  <video id="v" controls playsinline autoplay muted style="display:none">
-    <source id="src" src="" type="video/mp4">
-  </video>
-  <div id="loading" class="hint" style="display:none">加载中...</div>
-</div>
+<h2>阿旺视频下载</h2>
+<div id="filename" class="file"></div>
+<a class="btn" id="dllink" href="#">下载</a>
 <div id="status"></div>
-<a class="btn" id="dllink" href="#" style="display:none" download>下载视频</a>
-
+<div class="hint">
+  微信内点右上角 <b>&#183;&#183;&#183;</b> <b>在浏览器中打开</b>
+</div>
 <script>
-var isWx = /MicroMessenger/i.test(navigator.userAgent);
 (function(){
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
   if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
-
   var TUNNEL = 'par-roommates-venice-measuring.trycloudflare.com';
   var url = 'https://' + TUNNEL + '/download/' + encodeURIComponent(file);
   document.getElementById('filename').innerText = file;
-
-  if(isWx){
-    // 微信内：显示引导提示，不尝试播放
-    document.getElementById('wxHint').style.display = 'block';
-    document.getElementById('wxUrl').innerText = url;
-    document.getElementById('dllink').href = url;
-    document.getElementById('dllink').style.display = 'inline-block';
-    document.getElementById('dllink').innerText = '点此下载（或长按复制链接）';
-    document.getElementById('status').innerText = '';
-  } else {
-    // 外部浏览器：直接播放
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('src').src = url;
-    document.getElementById('dllink').href = url;
-    document.getElementById('dllink').setAttribute('download', file);
-    var v = document.getElementById('v');
-    v.onloadedmetadata = function(){
-      document.getElementById('loading').style.display = 'none';
-      v.style.display = 'block';
-      document.getElementById('dllink').style.display = 'inline-block';
-      document.getElementById('status').innerText = '播放中 长按视频可保存到相册';
-    };
-    v.onerror = function(){
-      document.getElementById('loading').innerText = '加载失败 点下载按钮';
-      document.getElementById('dllink').style.display = 'inline-block';
-    };
-  }
+  document.getElementById('dllink').href = url;
+  document.getElementById('dllink').onclick = function(e){
+    this.textContent = '下载中...';
+  };
 })();
-
-function copyWxUrl(){
-  var u = document.getElementById('wxUrl').innerText;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(u).then(function(){
-      alert('链接已复制，去浏览器粘贴打开');
-    });
-  } else {
-    prompt('请手动复制链接：', u);
-  }
-}
 </script>
 </body>
 </html>
