@@ -9,22 +9,19 @@ body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padd
 h2{color:#07c160;margin-bottom:8px;font-size:18px}
 .file{font-size:14px;color:#aaa;word-break:break-all;margin:12px 0}
 .btn{display:block;margin:10px auto;padding:16px 24px;background:#07c160;color:#fff;border-radius:12px;font-size:17px;text-decoration:none;font-weight:600;max-width:320px}
-.btn2{background:#333;color:#ccc}
 .hint{margin-top:20px;font-size:13px;color:#777;line-height:1.8}
-.hint b{color:#07c160}
 </style>
 </head>
 <body>
 <h2>阿旺视频</h2>
 <div id="filename" class="file"></div>
 
-<a class="btn" id="dl1" href="#">保存到手机</a>
-<a class="btn btn2" id="dl2" href="#">用浏览器下载</a>
+<a class="btn" id="dl" href="#">长按绿色按钮保存视频</a>
 
 <div class="hint">
-  <b>保存到手机：</b>点上面绿色按钮，如没反应就用下面白色按钮<br>
-  <b>保存后：</b>打开剪映 → 新建 → 从相册导入<br>
-  <b>都不行：</b>右上角 ··· → 在Chrome/Safari打开
+  长按上面按钮 → 下载链接 → 保存到文件<br>
+  然后打开剪映 → 从文件导入<br>
+  或复制此链接到 Chrome/Safari 打开下载
 </div>
 
 <script>
@@ -34,34 +31,7 @@ h2{color:#07c160;margin-bottom:8px;font-size:18px}
   if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
   document.getElementById('filename').innerText = file;
   var enc = encodeURIComponent(file);
-  var directUrl = 'https://tangshifu2026.github.io/' + enc;
-  
-  // 按钮1：强制下载（通过 raw.githubusercontent.com）
-  var rawUrl = 'https://raw.githubusercontent.com/tangshifu2026/tangshifu2026.github.io/main/' + enc;
-  var d1 = document.getElementById('dl1');
-  d1.href = rawUrl;
-  d1.setAttribute('download', file);
-  d1.onclick = function(e){
-    e.preventDefault();
-    var a = document.createElement('a');
-    a.href = rawUrl;
-    a.download = file;
-    a.click();
-    setTimeout(function(){
-      d1.textContent = '没反应？点下面白色按钮';
-      d1.style.background = '#555';
-    }, 3000);
-  };
-  
-  // 按钮2：直接打开链接
-  var TUNNEL = 'noted-channels-beaver-temporarily.trycloudflare.com';
-  var tunnelUrl = 'https://' + TUNNEL + '/download/' + enc;
-  var d2 = document.getElementById('dl2');
-  d2.href = directUrl;
-  d2.onclick = function(e){
-    e.preventDefault();
-    window.open(directUrl, '_blank');
-  };
+  document.getElementById('dl').href = 'https://tangshifu2026.github.io/' + enc;
 })();
 </script>
 </body>
