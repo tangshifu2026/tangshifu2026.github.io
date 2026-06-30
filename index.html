@@ -3,36 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>阿旺视频下载</title>
+<title>阿旺视频</title>
 <style>
-body{font-family:-apple-system,sans-serif;background:#111;color:#fff;text-align:center;padding:40px 20px}
+body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:40px 20px}
 h2{color:#07c160;margin-bottom:10px}
 .file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
-.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
-.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
-#status{font-size:12px;color:#888;margin-top:8px}
+.btn{display:inline-block;margin:8px;padding:14px 28px;background:#07c160;color:#fff;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
+.hint{margin-top:20px;font-size:13px;color:#777;line-height:1.6}
 </style>
 </head>
 <body>
-<h2>阿旺视频下载</h2>
+<h2>阿旺视频</h2>
 <div id="filename" class="file"></div>
-<a class="btn" id="dllink" href="#">下载</a>
-<div id="status"></div>
+<a class="btn" id="link1" href="#" download>方式1 GitHub直链</a><br>
+<a class="btn" id="link2" href="#" style="background:#333">方式2 隧道下载</a>
 <div class="hint">
-  微信内点右上角 <b>&#183;&#183;&#183;</b> <b>在浏览器中打开</b>
+  方式1打不开就试方式2<br>都打不开：点右上角 &#183;&#183;&#183; 浏览器打开
 </div>
 <script>
 (function(){
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
   if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
-  var TUNNEL = 'noted-channels-beaver-temporarily.trycloudflare.com';
-  var url = 'https://' + TUNNEL + '/download/' + encodeURIComponent(file);
   document.getElementById('filename').innerText = file;
-  document.getElementById('dllink').href = url;
-  document.getElementById('dllink').onclick = function(e){
-    this.textContent = '下载中...';
-  };
+  var enc = encodeURIComponent(file);
+  // 方式1: GitHub Pages 直接下载
+  document.getElementById('link1').href = 'https://tangshifu2026.github.io/' + enc;
+  // 方式2: 隧道下载（备用）
+  var TUNNEL = 'noted-channels-beaver-temporarily.trycloudflare.com';
+  document.getElementById('link2').href = 'https://' + TUNNEL + '/download/' + enc;
 })();
 </script>
 </body>
