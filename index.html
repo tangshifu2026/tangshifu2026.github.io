@@ -2,36 +2,46 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>阿旺视频</title>
 <style>
-body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:30px 16px}
-h2{color:#07c160;margin-bottom:8px;font-size:18px}
-.file{font-size:14px;color:#aaa;word-break:break-all;margin:12px 0}
-.btn{display:block;margin:10px auto;padding:16px 24px;background:#07c160;color:#fff;border-radius:12px;font-size:17px;text-decoration:none;font-weight:600;max-width:320px}
-.hint{margin-top:20px;font-size:13px;color:#777;line-height:1.8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;text-align:center;font-family:-apple-system,sans-serif}
+h2{color:#07c160;padding:14px 0 6px;font-size:17px}
+video{width:100%;max-height:65vh;display:block;margin:0 auto}
+#player{max-width:600px;margin:0 auto}
+.hint{padding:12px 20px;font-size:13px;color:#999;line-height:1.8}
+.hint b{color:#07c160}
+.loading{padding:40px;color:#888;font-size:14px}
 </style>
 </head>
 <body>
 <h2>阿旺视频</h2>
-<div id="filename" class="file"></div>
-
-<a class="btn" id="dl" href="#">长按绿色按钮保存视频</a>
-
-<div class="hint">
-  长按上面按钮 → 下载链接 → 保存到文件<br>
-  然后打开剪映 → 从文件导入<br>
-  或复制此链接到 Chrome/Safari 打开下载
+<div id="player">
+  <video id="v" controls playsinline style="display:none">
+    <source id="src" type="video/mp4">
+  </video>
+  <div id="loading" class="loading">加载中...</div>
 </div>
-
+<div class="hint">
+  <b>保存方法：</b>播放后点视频右下角 ··· → 存储视频 → 进相册<br>
+  然后打开<b>剪映</b> → 新建 → 从相册导入 → 编辑
+</div>
 <script>
 (function(){
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
-  if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
-  document.getElementById('filename').innerText = file;
+  if(!file){ document.body.innerHTML='<h2 style=padding:40px>'+
+    '阿旺视频</h2><p>缺少文件名</p>'; return; }
   var enc = encodeURIComponent(file);
-  document.getElementById('dl').href = 'https://tangshifu2026.github.io/' + enc;
+  var url = 'https://tangshifu2026.github.io/' + enc;
+  document.getElementById('src').src = url;
+  var v = document.getElementById('v');
+  v.onloadedmetadata = function(){
+    document.getElementById('loading').style.display = 'none';
+    v.style.display = 'block';
+  };
+  v.onerror = function(){ document.getElementById('loading').innerText = '加载失败'; };
 })();
 </script>
 </body>
