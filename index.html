@@ -5,30 +5,55 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>阿旺视频</title>
 <style>
-body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:40px 20px}
-h2{color:#07c160;margin-bottom:10px}
-.file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
-.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
-.btn2{display:inline-block;margin:10px;padding:12px 24px;background:#333;color:#ccc;border-radius:10px;font-size:14px;text-decoration:none}
-.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
+body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:40px 16px}
+h2{color:#07c160;margin-bottom:24px;font-size:22px}
+.list{max-width:400px;margin:0 auto;text-align:left}
+.item{background:#1a1a1a;border-radius:10px;margin:10px 0;padding:14px 18px}
+.fname{font-size:15px;color:#eee;word-break:break-all;margin-bottom:8px}
+.fsize{font-size:12px;color:#888;margin-bottom:10px}
+.btn{display:inline-block;padding:10px 24px;background:#07c160;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600}
+.hint{margin-top:28px;font-size:12px;color:#555;line-height:1.6}
 </style>
 </head>
 <body>
-<h2>阿旺视频</h2>
-<div id="filename" class="file"></div>
-<a class="btn" id="link1" href="#">GitHub下载</a>
-<a class="btn btn2" id="link2" href="#">隧道下载</a>
-<div class="hint">微信内打不开？右上角 ··· 浏览器打开</div>
+<h2>📦 阿旺视频</h2>
+<div class="list" id="files">加载中...</div>
+<div class="hint" id="hint"></div>
 <script>
 (function(){
-  var p = new URLSearchParams(location.search);
-  var file = p.get('file') || '';
-  if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
-  document.getElementById('filename').innerText = file;
-  var enc = encodeURIComponent(file);
-  document.getElementById('link1').href = 'https://tangshifu2026.github.io/' + enc;
-  var TUNNEL = 'surveys-salaries-almost-surgical.trycloudflare.com';
-  document.getElementById('link2').href = 'https://' + TUNNEL + '/download/' + enc;
+  var api = 'https://api.github.com/repos/tangshifu2026/tangshifu2026.github.io/contents/';
+  fetch(api).then(function(r){return r.json()}).then(function(files){
+    var el = document.getElementById('files');
+    var hint = document.getElementById('hint');
+    if(!Array.isArray(files) || files.length===0){
+      el.innerHTML = '<div class="item"><div class="fname">暂无文件</div></div>';
+      return;
+    }
+    var media = files.filter(function(f){
+      return /\.(mp4|zip|mov|avi|mkv|mp3|wav)$/i.test(f.name);
+    }).sort(function(a,b){return b.name.localeCompare(a.name);});
+    if(media.length===0){
+      el.innerHTML='<div class="item"><div class="fname">暂无视频文件</div></div>';
+      hint.innerHTML='右上角 ··· 浏览器打开可下载';
+      return;
+    }
+    el.innerHTML='';
+    media.forEach(function(f){
+      var sizeMB=(f.size/1048576).toFixed(1);
+      var enc=encodeURIComponent(f.name);
+      var gh='https://tangshifu2026.github.io/'+enc;
+      var d=document.createElement('div');
+      d.className='item';
+      d.innerHTML='<div class="fname">'+f.name+'</div>'
+        +'<div class="fsize">'+sizeMB+' MB</div>'
+        +'<a class="btn" href="'+gh+'" target="_blank">▶ 播放/下载</a>';
+      el.appendChild(d);
+    });
+    hint.innerHTML='点击按钮直接播放或下载<br>微信内打不开？右上角 ··· 浏览器打开';
+  }).catch(function(e){
+    document.getElementById('files').innerHTML=
+      '<div class="item"><div class="fname">加载失败：'+e.message+'</div></div>';
+  });
 })();
 </script>
 </body>
