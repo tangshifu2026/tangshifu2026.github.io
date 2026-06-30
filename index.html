@@ -26,7 +26,7 @@ h2{color:#07c160;margin-bottom:10px}
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
   if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
-  var TUNNEL = 'par-roommates-venice-measuring.trycloudflare.com';
+  var TUNNEL = 'minus-hey-insulation-florist.trycloudflare.com';
   var url = 'https://' + TUNNEL + '/download/' + encodeURIComponent(file);
   document.getElementById('filename').innerText = file;
   document.getElementById('dllink').href = url;
