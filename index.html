@@ -13,14 +13,24 @@ h2{color:#07c160;margin-bottom:24px;font-size:22px}
 .fsize{font-size:12px;color:#888;margin-bottom:10px}
 .btn{display:inline-block;padding:10px 24px;background:#07c160;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600}
 .hint{margin-top:28px;font-size:12px;color:#555;line-height:1.6}
+.loading{color:#888;font-size:14px}
 </style>
 </head>
 <body>
-<h2>📦 阿旺视频</h2>
-<div class="list" id="files">加载中...</div>
+<h2>阿旺视频</h2>
+<div class="list" id="files"><div class="loading">加载中...</div></div>
 <div class="hint" id="hint"></div>
 <script>
+var TUNNEL = 'availability-buck-except-dice.trycloudflare.com';
 (function(){
+  var path = window.location.pathname;
+  // 如果是 /filename 格式（非root），走隧道下载
+  if (path && path !== '/' && path !== '/index.html') {
+    var tunnelUrl = 'https://' + TUNNEL + '/download' + path;
+    window.location.replace(tunnelUrl);
+    return;
+  }
+  // 否则显示文件列表
   var api = 'https://api.github.com/repos/tangshifu2026/tangshifu2026.github.io/contents/';
   fetch(api).then(function(r){return r.json()}).then(function(files){
     var el = document.getElementById('files');
@@ -34,30 +44,28 @@ h2{color:#07c160;margin-bottom:24px;font-size:22px}
     }).sort(function(a,b){return b.name.localeCompare(a.name);});
     if(media.length===0){
       el.innerHTML='<div class="item"><div class="fname">暂无视频文件</div></div>';
-      hint.innerHTML='右上角 ··· 浏览器打开可下载';
+      hint.innerHTML='阿旺做完视频后链接在此显示';
       return;
     }
     el.innerHTML='';
     media.forEach(function(f){
       var sizeMB=(f.size/1048576).toFixed(1);
       var enc=encodeURIComponent(f.name);
-      var gh='https://tangshifu2026.github.io/'+enc;
       var d=document.createElement('div');
       d.className='item';
-      // mp4直接播放，zip下载（带download属性强制文件名）
       var isVideo=/\.mp4$/i.test(f.name);
       var btnHtml = isVideo
-        ? '<a class="btn" href="'+gh+'" target="_blank">▶ 播放预览</a>'
-        : '<a class="btn" href="'+gh+'" download="'+f.name+'">⬇ 下载ZIP</a>';
+        ? '<a class="btn" href="https://'+TUNNEL+'/download/'+enc+'" target="_blank"> 下载</a>'
+        : '<a class="btn" href="https://'+TUNNEL+'/download/'+enc+'" download="'+f.name+'"> 下载ZIP</a>';
       d.innerHTML='<div class="fname">'+f.name+'</div>'
         +'<div class="fsize">'+sizeMB+' MB</div>'
         +btnHtml;
       el.appendChild(d);
     });
-    hint.innerHTML='▶播放预览 | ⬇下载后解压导入剪映<br>微信内打不开？右上角 ··· 浏览器打开';
+    hint.innerHTML='微信内打不开？右上角 ... 浏览器打开';
   }).catch(function(e){
     document.getElementById('files').innerHTML=
-      '<div class="item"><div class="fname">加载失败：'+e.message+'</div></div>';
+      '<div class="item"><div class="fname">加载失败，稍后重试</div></div>';
   });
 })();
 </script>
