@@ -2,46 +2,33 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>阿旺视频</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#fff;text-align:center;font-family:-apple-system,sans-serif}
-h2{color:#07c160;padding:14px 0 6px;font-size:17px}
-video{width:100%;max-height:65vh;display:block;margin:0 auto}
-#player{max-width:600px;margin:0 auto}
-.hint{padding:12px 20px;font-size:13px;color:#999;line-height:1.8}
-.hint b{color:#07c160}
-.loading{padding:40px;color:#888;font-size:14px}
+body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:40px 20px}
+h2{color:#07c160;margin-bottom:10px}
+.file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
+.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
+.btn2{display:inline-block;margin:10px;padding:12px 24px;background:#333;color:#ccc;border-radius:10px;font-size:14px;text-decoration:none}
+.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
 </style>
 </head>
 <body>
 <h2>阿旺视频</h2>
-<div id="player">
-  <video id="v" controls playsinline style="display:none">
-    <source id="src" type="video/mp4">
-  </video>
-  <div id="loading" class="loading">加载中...</div>
-</div>
-<div class="hint">
-  <b>保存方法：</b>播放后点视频右下角 ··· → 存储视频 → 进相册<br>
-  然后打开<b>剪映</b> → 新建 → 从相册导入 → 编辑
-</div>
+<div id="filename" class="file"></div>
+<a class="btn" id="link1" href="#">GitHub下载</a>
+<a class="btn btn2" id="link2" href="#">隧道下载</a>
+<div class="hint">微信内打不开？右上角 ··· 浏览器打开</div>
 <script>
 (function(){
   var p = new URLSearchParams(location.search);
   var file = p.get('file') || '';
-  if(!file){ document.body.innerHTML='<h2 style=padding:40px>'+
-    '阿旺视频</h2><p>缺少文件名</p>'; return; }
+  if(!file){ document.getElementById('filename').innerText='缺少文件'; return; }
+  document.getElementById('filename').innerText = file;
   var enc = encodeURIComponent(file);
-  var url = 'https://tangshifu2026.github.io/' + enc;
-  document.getElementById('src').src = url;
-  var v = document.getElementById('v');
-  v.onloadedmetadata = function(){
-    document.getElementById('loading').style.display = 'none';
-    v.style.display = 'block';
-  };
-  v.onerror = function(){ document.getElementById('loading').innerText = '加载失败'; };
+  document.getElementById('link1').href = 'https://tangshifu2026.github.io/' + enc;
+  var TUNNEL = 'noted-channels-beaver-temporarily.trycloudflare.com';
+  document.getElementById('link2').href = 'https://' + TUNNEL + '/download/' + enc;
 })();
 </script>
 </body>
