@@ -44,12 +44,17 @@ h2{color:#07c160;margin-bottom:24px;font-size:22px}
       var gh='https://tangshifu2026.github.io/'+enc;
       var d=document.createElement('div');
       d.className='item';
+      // mp4直接播放，zip下载（带download属性强制文件名）
+      var isVideo=/\.mp4$/i.test(f.name);
+      var btnHtml = isVideo
+        ? '<a class="btn" href="'+gh+'" target="_blank">▶ 播放预览</a>'
+        : '<a class="btn" href="'+gh+'" download="'+f.name+'">⬇ 下载ZIP</a>';
       d.innerHTML='<div class="fname">'+f.name+'</div>'
         +'<div class="fsize">'+sizeMB+' MB</div>'
-        +'<a class="btn" href="'+gh+'" target="_blank">▶ 播放/下载</a>';
+        +btnHtml;
       el.appendChild(d);
     });
-    hint.innerHTML='点击按钮直接播放或下载<br>微信内打不开？右上角 ··· 浏览器打开';
+    hint.innerHTML='▶播放预览 | ⬇下载后解压导入剪映<br>微信内打不开？右上角 ··· 浏览器打开';
   }).catch(function(e){
     document.getElementById('files').innerHTML=
       '<div class="item"><div class="fname">加载失败：'+e.message+'</div></div>';
