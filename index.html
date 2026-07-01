@@ -1,73 +1,37 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>阿旺视频</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>视频下载</title>
 <style>
-body{font-family:-apple-system;background:#111;color:#fff;text-align:center;padding:40px 16px}
-h2{color:#07c160;margin-bottom:24px;font-size:22px}
-.list{max-width:400px;margin:0 auto;text-align:left}
-.item{background:#1a1a1a;border-radius:10px;margin:10px 0;padding:14px 18px}
-.fname{font-size:15px;color:#eee;word-break:break-all;margin-bottom:8px}
-.fsize{font-size:12px;color:#888;margin-bottom:10px}
-.btn{display:inline-block;padding:10px 24px;background:#07c160;color:#fff;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600}
-.hint{margin-top:28px;font-size:12px;color:#555;line-height:1.6}
-.loading{color:#888;font-size:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#111;color:#eee;padding:16px;min-height:100vh}
+h1{font-size:20px;margin-bottom:16px;text-align:center}
+.card{background:#1a1a1a;border-radius:12px;padding:12px;margin-bottom:16px}
+.card video{width:100%;border-radius:8px;max-height:300px;background:#000}
+.card h3{font-size:16px;margin:8px 0}
+.card .info{font-size:13px;color:#999;margin-bottom:8px}
+.btn{display:block;text-align:center;padding:12px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;margin:6px 0}
+.btn-dl{background:#2563eb;color:#fff}
+.btn-preview{background:#333;color:#fff}
+.files{margin-bottom:24px}
+.files a{display:block;padding:10px 0;border-bottom:1px solid #333;color:#60a5fa;text-decoration:none;font-size:14px}
+.files a:last-child{border-bottom:none}
 </style>
 </head>
 <body>
-<h2>阿旺视频</h2>
-<div class="list" id="files"><div class="loading">加载中...</div></div>
-<div class="hint" id="hint"></div>
-<script>
-var TUNNEL = 'president-game-queensland-collecting.trycloudflare.com';
-(function(){
-  var path = window.location.pathname;
-  // 如果是 /filename 格式（非root），走隧道下载
-  if (path && path !== '/' && path !== '/index.html') {
-    var tunnelUrl = 'https://' + TUNNEL + '/download' + path;
-    window.location.replace(tunnelUrl);
-    return;
-  }
-  // 否则显示文件列表
-  var api = 'https://api.github.com/repos/tangshifu2026/tangshifu2026.github.io/contents/';
-  fetch(api).then(function(r){return r.json()}).then(function(files){
-    var el = document.getElementById('files');
-    var hint = document.getElementById('hint');
-    if(!Array.isArray(files) || files.length===0){
-      el.innerHTML = '<div class="item"><div class="fname">暂无文件</div></div>';
-      return;
-    }
-    var media = files.filter(function(f){
-      return /\.(mp4|zip|mov|avi|mkv|mp3|wav)$/i.test(f.name);
-    }).sort(function(a,b){return b.name.localeCompare(a.name);});
-    if(media.length===0){
-      el.innerHTML='<div class="item"><div class="fname">暂无视频文件</div></div>';
-      hint.innerHTML='阿旺做完视频后链接在此显示';
-      return;
-    }
-    el.innerHTML='';
-    media.forEach(function(f){
-      var sizeMB=(f.size/1048576).toFixed(1);
-      var enc=encodeURIComponent(f.name);
-      var d=document.createElement('div');
-      d.className='item';
-      var isVideo=/\.mp4$/i.test(f.name);
-      var btnHtml = isVideo
-        ? '<a class="btn" href="https://'+TUNNEL+'/download/'+enc+'" target="_blank"> 下载</a>'
-        : '<a class="btn" href="https://'+TUNNEL+'/download/'+enc+'" download="'+f.name+'"> 下载ZIP</a>';
-      d.innerHTML='<div class="fname">'+f.name+'</div>'
-        +'<div class="fsize">'+sizeMB+' MB</div>'
-        +btnHtml;
-      el.appendChild(d);
-    });
-    hint.innerHTML='微信内打不开？右上角 ... 浏览器打开';
-  }).catch(function(e){
-    document.getElementById('files').innerHTML=
-      '<div class="item"><div class="fname">加载失败，稍后重试</div></div>';
-  });
-})();
-</script>
+<h1>📹 视频文件</h1>
+<div class="card">
+<h3>复式楼开场_混剪.mp4</h3>
+<div class="info">34.84 MB — 成品</div>
+<video controls preload="metadata" poster="">
+  <source src="复式楼开场_混剪.mp4" type="video/mp4">
+  您的浏览器不支持视频预览
+</video>
+<a class="btn btn-dl" href="复式楼开场_混剪.mp4" download>📥 下载到手机</a>
+<a class="btn btn-preview" href="复式楼开场_混剪.mp4">▶ 全屏预览</a>
+</div>
+<p style="text-align:center;color:#555;font-size:12px;margin-top:32px">下载后可在手机剪映中导入编辑</p>
 </body>
 </html>
