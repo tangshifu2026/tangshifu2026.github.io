@@ -1,37 +1,61 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>视频下载</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>阿旺视频下载</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,sans-serif;background:#111;color:#eee;padding:16px;min-height:100vh}
-h1{font-size:20px;margin-bottom:16px;text-align:center}
-.card{background:#1a1a1a;border-radius:12px;padding:12px;margin-bottom:16px}
-.card video{width:100%;border-radius:8px;max-height:300px;background:#000}
-.card h3{font-size:16px;margin:8px 0}
-.card .info{font-size:13px;color:#999;margin-bottom:8px}
-.btn{display:block;text-align:center;padding:12px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;margin:6px 0}
-.btn-dl{background:#2563eb;color:#fff}
-.btn-preview{background:#333;color:#fff}
-.files{margin-bottom:24px}
-.files a{display:block;padding:10px 0;border-bottom:1px solid #333;color:#60a5fa;text-decoration:none;font-size:14px}
-.files a:last-child{border-bottom:none}
+body{font-family:-apple-system,sans-serif;background:#111;color:#fff;text-align:center;padding:40px 20px}
+h2{color:#07c160;margin-bottom:10px}
+.file{font-size:14px;color:#aaa;word-break:break-all;margin:16px 0}
+.btn{display:inline-block;margin:10px;padding:14px 28px;background:#07c160;color:#fff;border:none;border-radius:10px;font-size:16px;text-decoration:none;font-weight:600}
+.btn2{display:inline-block;margin:10px;padding:12px 24px;background:#444;color:#ccc;border:none;border-radius:10px;font-size:14px;text-decoration:none;font-weight:500}
+.hint{margin-top:24px;font-size:13px;color:#777;line-height:1.6}
+#status{margin:8px 0;font-size:13px}
 </style>
 </head>
 <body>
-<h1>📹 视频文件</h1>
-<div class="card">
-<h3>复式楼开场_混剪.mp4</h3>
-<div class="info">34.84 MB — 成品</div>
-<video controls preload="metadata" poster="">
-  <source src="复式楼开场_混剪.mp4" type="video/mp4">
-  您的浏览器不支持视频预览
-</video>
-<a class="btn btn-dl" href="复式楼开场_混剪.mp4" download>📥 下载到手机</a>
-<a class="btn btn-preview" href="复式楼开场_混剪.mp4">▶ 全屏预览</a>
+<h2>⬇️ 阿旺视频下载</h2>
+<div id="filename" class="file"></div>
+<a class="btn" id="dllink" href="#" download>📥 点击下载</a>
+<a class="btn2" id="playlink" href="#">▶️ 在线播放</a>
+<div id="status"></div>
+<div class="hint">
+  手机端：点「点击下载」→ 浏览器底部弹出保存提示<br>
+  电脑端：点「点击下载」→ 自动保存到下载文件夹<br>
+  如果下载失败，点「在线播放」后长按视频保存
 </div>
-<p style="text-align:center;color:#555;font-size:12px;margin-top:32px">下载后可在手机剪映中导入编辑</p>
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  var file = p.get('file') || '';
+
+  // 如果没有 ?file= 参数，尝试从路径提取
+  if(!file){
+    var path = location.pathname.replace(/^\//,'');
+    if(path && path !== 'index.html' && path !== ''){
+      file = decodeURIComponent(path);
+    }
+  }
+
+  if(!file){
+    document.getElementById('filename').innerText = '未指定文件';
+    document.getElementById('dllink').style.display = 'none';
+    document.getElementById('playlink').style.display = 'none';
+    document.getElementById('status').innerText = '请使用链接: ?file=xxx.mp4';
+    return;
+  }
+
+  var dlUrl = file;
+  // 确保 URL 编码正确
+  if(dlUrl.indexOf('/') !== 0) dlUrl = '/' + dlUrl;
+
+  document.getElementById('filename').innerText = '📁 ' + file;
+  document.getElementById('dllink').href = dlUrl;
+  document.getElementById('dllink').setAttribute('download', file);
+  document.getElementById('playlink').href = dlUrl;
+  document.getElementById('status').innerText = '';
+})();
+</script>
 </body>
 </html>
